@@ -1,0 +1,33 @@
+<?php
+	setlocale(LC_ALL , "swedish");
+	
+	$weekDay = ucfirst(strftime("%A"));
+	$month = ucfirst(strftime("%B"));
+	// Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
+	$format = '%e';
+
+	// Kontrollerar ifall windowsformatet används och ersätter %e med en fungerande del.
+	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
+	{
+    	$format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
+	}
+	
+	echo "<html>
+			<head>
+				<title>Laboration 2 - Login del 1</title>
+				<meta charset='utf-8'>
+			</head>
+			<body>
+				<h1>Laboration 2 - Login del 1</h1>
+				<h2>Ej inloggad</h2>
+				<form id='loginForm'>
+					<fieldset>
+						<legend>Login - Skriv in användarnamn och lösenord</legend>
+						Namn: <input type='text' name='userName'> Lösenord: <input type='password' name='userPassword'> <input type='checkbox' name='stayLoggedIn'>Håll mig inloggad:
+						<button type='submit' form='loginForm' value='Submit'>Log in</button>
+					</fieldset>
+				</form>
+				" . strftime('' . $weekDay . ', den ' . $format . ''. $month . 'år %Y. Klockan är [%H:%M:%S]') . ".
+			</body>
+		</html>";
+?>

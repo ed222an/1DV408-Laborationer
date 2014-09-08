@@ -1,0 +1,8 @@
+<?php
+
+	echo "<h1>Laboration 2 - Login del 1</h1><h2>Ej Inloggad</h2>
+	<form>
+	Namn: <input type="text" name="name"
+	</form>";
+
+?>

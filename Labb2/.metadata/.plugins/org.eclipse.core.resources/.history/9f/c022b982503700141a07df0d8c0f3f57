@@ -1,0 +1,13 @@
+<?php
+
+	echo "<h1>Laboration 2 - Login del 1</h1><h2>Not logged in</h2>
+	<form id='loginForm'>
+		<fieldset>
+			<legend>Log in - Enter username and password</legend>
+			Name: <input type='text' name='userName'> Password: <input type='text' name='userPassword'> <input type='checkbox' name='stayLoggedIn'>Stay logged in
+		</fieldset>
+	</form>
+	<button type='submit' form='loginForm' value='Submit'>Log in</button>
+	" . date('l jS \of F Y h:i:s') . ".";
+
+?>
