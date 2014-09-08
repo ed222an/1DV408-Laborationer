@@ -2,7 +2,7 @@
 	setlocale(LC_ALL , "swedish"); // Ställer in sidans format så att månad, år, tid etc. visas på svenska.
 	
 	// Variabler
-	$weekDay = ucfirst(utf8_encode(strftime("%A"))); // Hittar veckodagen, tillåter Å,Ä,Ö och gör den första bokstaven stor.
+	$weekDay = ucfirst(utf8_encode((strftime("%A"))); // Hittar veckodagen och gör den första bokstaven stor.
 	$month = ucfirst(strftime("%B")); // Hittar månaden och gör den första bokstaven stor.
 	$year = strftime("%Y");
 	$time = strftime("%H:%M:%S");
