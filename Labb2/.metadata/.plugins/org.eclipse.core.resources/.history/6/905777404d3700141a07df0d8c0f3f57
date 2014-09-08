@@ -1,8 +1,0 @@
-<?php
-
-	echo "<h1>Laboration 2 - Login del 1</h1><h2>Not logged in</h2>
-	<form>
-		Name: <input type="text" name="name"> Password: <input type="text" name="password">
-	</form>";
-
-?>

@@ -16,13 +16,13 @@
 	
 	echo "<html>
 			<head>
-				<title>Laboration 2 Login del 1</title>
+				<title>Laboration 2 - Login del 1</title>
 				<meta charset='utf-8'>
 			</head>
 			<body>
-				<h1>Laboration 2 - ed222an</h1>
+				<h1>Laboration 2 - Login del 1</h1>
 				<h2>Ej inloggad</h2>
-				<a href=''>Registrera ny användare</a>
+				<a>Registrera ny användare</a>
 				<form id='loginForm'>
 					<fieldset>
 						<legend>Login - Skriv in användarnamn och lösenord</legend>
