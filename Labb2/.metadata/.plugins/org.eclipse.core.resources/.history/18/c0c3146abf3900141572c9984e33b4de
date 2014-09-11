@@ -1,0 +1,33 @@
+<?php
+
+	class LoginModel
+	{
+		private $correctUsername = "Admin";
+		private $correctPassword = "Password";
+			
+		public function __construct()
+		{
+			
+		}
+		
+		public function verifyUserInput($inputUsername, $inputPassword, $inputCheckbox)
+		{
+			// Kontrollerar ifall inparametrarna matchar de faktiska användaruppgifterna.
+			if($inputUsername == $this->correctUsername && $inputPassword == $this->correctPassword)
+			{
+				if($inputCheckbox === true)
+				{	
+					// skapa cookie.
+				}
+			}
+			else if($inputUsername == "" || $inputUsername === NULL)
+			{
+				// Visa felmeddelande.
+				var_dump("Användarnamn saknas.");
+				die();
+				throw new Exception("Användarnamn saknas");
+			}
+		}
+	}
+
+?>

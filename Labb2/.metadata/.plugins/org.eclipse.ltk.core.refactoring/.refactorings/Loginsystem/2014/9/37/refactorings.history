@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Loginsystem/src/HTMLView.php&apos; to &apos;LoginView.php&apos;" description="Rename resource &apos;HTMLView.php&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/HTMLView.php" name="LoginView.php" stamp="1410434597069" updateReferences="true"/>
+</session>

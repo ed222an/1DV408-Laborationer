@@ -1,0 +1,39 @@
+<?php
+	
+	require_once("src/LoginModel.php");
+	require_once("src/LoginView.php");
+	
+	class LoginController
+	{
+		private $view;
+		private $model;
+		
+		public function __construct()
+		{
+			$this->model = new LoginModel();
+			$this->view = new LoginView($this->model);
+			
+			$this->doLogin();
+		}
+		
+		public function doHTMLBody()
+		{
+			return $this->view->showLoginPage();
+		}
+		
+		public function doLogin()
+		{
+			// Hantera indata
+			if($this->view->didUserPressLogin())
+			{
+				var_dump("test");
+				die();
+				$this->model->verifyUserInput($_POST['username'], $_POST['password'], $_POST['checkbox']);
+			}
+			
+			//Generera utdata
+			return $this->view->showLoginPage();
+		}
+	}
+	
+?>

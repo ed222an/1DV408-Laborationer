@@ -1,0 +1,29 @@
+<?php
+
+	class LoginModel
+	{
+		private $correctUsername = "Admin";
+		private $correctPassword = "Password";
+			
+		public function __construct()
+		{
+			
+		}
+		
+		public function verifyUserInput($inputUsername, $inputPassword, $inputCheckbox)
+		{
+			if($inputUsername == $this->correctUsername && $inputPassword == $this->correctPassword)
+			{
+				//var_dump("Lyckat inlogg!");
+				//die();
+				// skapa cookie, etc.
+			}
+			else
+			{
+				//var_dump("Felaktig inlogg!");
+				//die();
+			}
+		}
+	}
+
+?>

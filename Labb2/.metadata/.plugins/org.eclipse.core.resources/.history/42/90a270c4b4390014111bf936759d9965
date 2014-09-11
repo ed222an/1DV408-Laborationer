@@ -1,0 +1,14 @@
+<?php
+
+	class LoginModel
+	{
+		private $correctUsername = "Admin";
+		private $correctPassword = "Password";
+			
+		public function __construct()
+		{
+			
+		}
+	}
+
+?>
