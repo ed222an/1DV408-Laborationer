@@ -1,0 +1,70 @@
+<?php
+	
+	require_once("src/LoginModel.php");
+	require_once("src/LoginView.php");
+	
+	class LoginController
+	{
+		private $view;
+		private $model;
+		
+		public function __construct()
+		{
+			$this->model = new LoginModel();
+			$this->view = new LoginView($this->model);
+			
+			if($this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
+			{
+				$this->doLogin();
+			}
+			
+			$this->doLogout();
+		}
+		
+		public function doHTMLBody()
+		{
+			return $this->view->showLoginPage();
+		}
+		
+		public function doLogin()
+		{
+			// Kontrollerar indata
+			$checkboxStatus = false;
+			
+			// Kontrollera ifall "Håll mig inloggad"-rutan är ikryssad.
+			if(isset($_POST['checkbox']))
+			{
+				$checkboxStatus = true;
+			}
+			
+			try
+			{
+				// Verifiera data i fälten.
+				$this->model->verifyUserInput($_POST['username'], $_POST['password'], $checkboxStatus);
+			}
+			catch(Exception $e)
+			{
+				$this->view->showMessage($e->getMessage());
+			}
+			
+			$this->view->successfulLogin();
+			
+			//Generera utdata
+			return $this->view->showLoginPage();
+		}
+		
+		public function doLogout()
+		{
+			// Kontrollera indata, tryckte användaren på Logga ut?
+			if($this->view->didUserPressLogout())
+			{
+				// Logga ut.
+				$this->model->logOut();
+				
+				//Generera utdata, tillåt användaren att logga in igen.
+				$this->doLogin();
+			}
+		}
+	}
+	
+?>

@@ -3,7 +3,7 @@
 	class LoginView
 	{
 		private $model;
-		private $loginStatus = "Ej inloggad";
+		private $loginStatus = "";
 		private $username = "username";
 		private $password = "password";
 		private $checkbox = "checkbox";
@@ -14,9 +14,16 @@
 			$this->model = $model;
 		}
 		
+		// Kontrollerar ifall användarnamnet är lagrat i POST-arrayen.
 		public function didUserPressLogin()
-		{	
+		{
 			return isset($_POST[$this->username]);
+		}
+		
+		// Kontrollerar ifall URL:en innehåller logout.
+		public function didUserPressLogout()
+		{
+			return isset($_GET['logout']);
 		}
 		
 		// Sätter body-innehållet.
@@ -28,7 +35,31 @@
 			$year = strftime("%Y");
 			$time = strftime("%H:%M:%S");
 			$format = '%e'; // Fixar formatet så att datumet anpassas för olika platformar. Lösning hittade på http://php.net/manual/en/function.strftime.php
-
+			
+			// Kontrollerar inloggningsstatus. Är användaren inloggad...	
+			if($this->model->checkLoginStatus())
+			{				
+				// ...visa användarsidan...
+				$contentString = "
+					$this->message
+					<p><a href='?logout'>Logga ut</a></p>";
+				$this->loginStatus = $this->model->getLoggedInUser() . " är inloggad";
+			}
+			else // ...annars visas inloggningssidan.
+			{
+				$this->loginStatus = "Ej inloggad";
+				$contentString = 
+				"<form id='loginForm' method=post action='" . $_SERVER['PHP_SELF'] . "'>
+					<fieldset>
+						<legend>Login - Skriv in användarnamn och lösenord</legend>
+						$this->message
+						Namn: <input type='text' name='$this->username' value='" . $this->getInputUsername() . "'> 
+						Lösenord: <input type='password' name='$this->password'> 
+						<input type='checkbox' name='$this->checkbox' value='checked'>Håll mig inloggad:
+						<button type='submit' name='button' form='loginForm' value='Submit'>Logga in</button>
+					</fieldset>
+				</form>";
+			}
 			
 			// Kontrollerar ifall windowsformatet används och ersätter %e med en fungerande del.
 			if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')
@@ -39,15 +70,8 @@
 			$HTMLbody = "
 				<h1>Laboration 2 - ed222an</h1>
 				<h2>$this->loginStatus</h2>
-				<a href=''>Registrera ny användare</a>
-				<form id='loginForm' method=post>
-					<fieldset>
-						<legend>Login - Skriv in användarnamn och lösenord</legend>
-						$this->message
-						Namn: <input type='text' name='$this->username' value='" . $this->getInputUsername() . "'> Lösenord: <input type='password' name='$this->password'> <input type='checkbox' name='$this->checkbox' value='checked'>Håll mig inloggad:
-						<button type='submit' name='button' form='loginForm' value='Submit'>Log in</button>
-					</fieldset>
-				</form>
+				<p><a href=''>Registrera ny användare</a></p>
+				$contentString
 				" . strftime('' . $weekDay . ', den ' . $format . ' '. $month . ' år ' . $year . '. Klockan är [' . $time . ']') . ".";
 			
 			return $HTMLbody;
@@ -66,13 +90,21 @@
 			{
 				return $_POST['username'];
 			}
+			
+			// Är inte användarnamnet satt skickas en tomsträng med.
 			return "";
 		}
 		
-		// Visar inloggningssidan.
-		public function loginSuccess()
+		// Visar login-meddelande.
+		public function successfulLogin()
 		{
-			$this->loginStatus = $this->getInputUsername() . " är inloggad";
+			$this->showMessage("Inloggningen lyckades!");
+		}
+		
+		// Visar logout-meddelande.
+		public function successfulLogout()
+		{
+			$this->showMessage("Du har nu loggat ut");
 		}
 	}
 ?>

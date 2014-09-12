@@ -10,22 +10,38 @@
 		
 		public function __construct()
 		{
+			// Skapar nya instanser av modell- & vy-klassen.
 			$this->model = new LoginModel();
 			$this->view = new LoginView($this->model);
 			
-			$this->doLogin();
+			// Ifall användaren tryckt på "Logga in" och inte redan är inloggad...
+			if($this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
+			{
+				// ...så loggas användaren in.
+				$this->doLogin();
+			}
+			
+			// Ifall användaren tryckt på "Logga ut" och är inloggad...
+			if($this->view->didUserPressLogout() && $this->model->checkLoginStatus())
+			{
+				// ...så loggas användaren ut.
+				$this->doLogout();
+			}
 		}
 		
+		// Hämtar sidans innehåll.
 		public function doHTMLBody()
 		{
 			return $this->view->showLoginPage();
 		}
 		
+		// Försöker verifiera och logga in användaren.
 		public function doLogin()
 		{
-			// Kontrollerar indata, har användaren tryckt på Log in?
-			if($this->view->didUserPressLogin())
+			// Kontrollerar ifall användaren tryckt på "Logga in" och inte redan är inloggad.
+			if($this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
 			{
+				// Kontrollerar indata
 				$checkboxStatus = false;
 				
 				// Kontrollera ifall "Håll mig inloggad"-rutan är ikryssad.
@@ -37,19 +53,35 @@
 				try
 				{
 					// Verifiera data i fälten.
-					if($this->model->verifyUserInput($_POST['username'], $_POST['password'], $checkboxStatus))
-					{
-						$this->view->loginSuccess();	
-					}
+					$this->model->verifyUserInput($_POST['username'], $_POST['password'], $checkboxStatus);
 				}
 				catch(Exception $e)
 				{
+					// Visar eventuella felmeddelanden.
 					$this->view->showMessage($e->getMessage());
 				}
 			}
 			
+			// Visar login-meddelande.
+			$this->view->successfulLogin();
+			
 			//Generera utdata
 			return $this->view->showLoginPage();
+		}
+		
+		// Loggar ut användaren.
+		public function doLogout()
+		{
+			// Kontrollera indata, tryckte användaren på Logga ut?
+			if($this->view->didUserPressLogout() && $this->model->checkLoginStatus())
+			{
+				// Logga ut.
+				$this->model->logOut();
+				
+				//Generera utdata, tillåt användaren att logga in igen.
+				$this->doLogin();
+				$this->view->successfulLogout();
+			}
 		}
 	}
 	
