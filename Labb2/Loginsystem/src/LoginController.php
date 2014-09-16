@@ -14,18 +14,35 @@
 			$this->model = new LoginModel();
 			$this->view = new LoginView($this->model);
 			
-			// Ifall användaren tryckt på "Logga in" och inte redan är inloggad...
-			if($this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
+			// Kontrollerar ifall det finns kakor och ifall användaren inte är inloggad.
+			if($this->view->searchForCookies() && !$this->model->checkLoginStatus())
 			{
-				// ...så loggas användaren in.
-				$this->doLogin();
+				try
+				{
+					// Logga in med kakor.
+					$this->view->loginWithCookies();
+				}
+				catch(Exception $e)
+				{
+					// Visar eventuella felmeddelanden.
+					$this->view->showMessage($e->getMessage());
+				}
 			}
-			
-			// Ifall användaren tryckt på "Logga ut" och är inloggad...
-			if($this->view->didUserPressLogout() && $this->model->checkLoginStatus())
+			else // Annars, visa standardsidan på normalt vis.
 			{
-				// ...så loggas användaren ut.
-				$this->doLogout();
+				// Ifall användaren tryckt på "Logga in" och inte redan är inloggad...
+				if($this->view->didUserPressLogin() && !$this->model->checkLoginStatus())
+				{
+					// ...så loggas användaren in.
+					$this->doLogin();
+				}
+			
+				// Ifall användaren tryckt på "Logga ut" och är inloggad...
+				if($this->view->didUserPressLogout() && $this->model->checkLoginStatus())
+				{
+					// ...så loggas användaren ut.
+					$this->doLogout();
+				}
 			}
 		}
 		
@@ -53,7 +70,17 @@
 				try
 				{
 					// Verifiera data i fälten.
-					$this->model->verifyUserInput($_POST['username'], $_POST['password'], $checkboxStatus);
+					$this->model->verifyUserInput($_POST['username'], $_POST['password']);
+					
+					// Kontrollerar om "Håll mig inloggad"-rutan är ikryssad.
+					if($checkboxStatus === true)
+					{
+						// Skapa cookies.
+						$this->view->createCookies($_POST['username'], $_POST['password']);
+					}
+					
+					// Visar login-meddelande.
+					$this->view->successfulLogin();
 				}
 				catch(Exception $e)
 				{
@@ -61,9 +88,6 @@
 					$this->view->showMessage($e->getMessage());
 				}
 			}
-			
-			// Visar login-meddelande.
-			$this->view->successfulLogin();
 			
 			//Generera utdata
 			return $this->view->showLoginPage();
@@ -77,6 +101,13 @@
 			{
 				// Logga ut.
 				$this->model->logOut();
+				
+				// Ifall det finns cookies...
+				if($this->view->searchForCookies())
+				{
+					// ...ta bort dem.
+					$this->view->removeCookies();
+				}
 				
 				//Generera utdata, tillåt användaren att logga in igen.
 				$this->doLogin();

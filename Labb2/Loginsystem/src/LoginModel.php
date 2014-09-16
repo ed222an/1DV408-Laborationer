@@ -17,8 +17,11 @@
 		}
 		
 		// Kontrollerar användarinput gentemot de faktiska användaruppgifterna.
-		public function verifyUserInput($inputUsername, $inputPassword, $inputCheckbox)
-		{	
+		public function verifyUserInput($inputUsername, $inputPassword)
+		{
+			// Skapar en hårdkodad krypterad version av lösenordet.
+			$cryptedPassword = "$1$/S..a.1.\$VQ3dGKDQb.GSVCGyNWx05.";
+				
 			if($inputUsername == "" || $inputUsername === NULL)
 			{
 				// Kasta undantag.
@@ -37,13 +40,17 @@
 				// Inloggningsstatus och användarnamn sparas i sessionen.
 				$_SESSION['loggedIn'] = true;
 				$_SESSION['loggedInUser'] = $inputUsername;
-				
-				
-				if($inputCheckbox === true)
-				{	
-					// skapa cookie.
-				}
-				
+								
+				return true;
+			}
+			
+			// Kontrollerar ifall användaren loggar in med korrekt användarnamn och ett krypterat lösenord.
+			if($inputUsername == $this->correctUsername && $inputPassword == $cryptedPassword)
+			{
+				// Inloggningsstatus och användarnamn sparas i sessionen.
+				$_SESSION['loggedIn'] = true;
+				$_SESSION['loggedInUser'] = $inputUsername;
+								
 				return true;
 			}
 			else

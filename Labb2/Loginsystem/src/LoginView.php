@@ -49,7 +49,7 @@
 			{
 				$this->loginStatus = "Ej inloggad";
 				$contentString = 
-				"<form id='loginForm' method=post action='" . $_SERVER['PHP_SELF'] . "'>
+				"<form id='loginForm' method=post action='?login'>
 					<fieldset>
 						<legend>Login - Skriv in användarnamn och lösenord</legend>
 						$this->message
@@ -77,10 +77,36 @@
 			return $HTMLbody;
 		}
 		
-		// Visar eventuella meddelanden.
-		public function showMessage($message)
+		// Skapar cookies innehållande de medskickande värdena.
+		public function createCookies($usernameToSave, $passwordToSave)
 		{
-			$this->message = "<p>" . $message . "</p>";
+			setcookie("Username", $usernameToSave, time()+60*60*24*30);
+			setcookie("Password", crypt($passwordToSave), time()+60*60*24*30);
+		}
+		
+		public function searchForCookies()
+		{
+			if(isset($_COOKIE["Username"]) === true && isset($_COOKIE["Password"]) === true)
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
+		// Logga in med kakor.
+		public function loginWithCookies()
+		{
+			$this->model->verifyUserInput($_COOKIE["Username"], $_COOKIE["Password"]);
+		}
+		
+		// Tar bort alla cookies.
+		public function removeCookies()
+		{
+			foreach ($_COOKIE as $c_key => $c_value)
+			{
+				setcookie($c_key, NULL, 1);
+			}
 		}
 		
 		// Sparar angivet användarnamn i textfältet.
@@ -93,6 +119,12 @@
 			
 			// Är inte användarnamnet satt skickas en tomsträng med.
 			return "";
+		}
+		
+		// Visar eventuella meddelanden.
+		public function showMessage($message)
+		{
+			$this->message = "<p>" . $message . "</p>";
 		}
 		
 		// Visar login-meddelande.
