@@ -81,7 +81,7 @@
 		public function createCookies($usernameToSave, $passwordToSave)
 		{
 			setcookie("Username", $usernameToSave, time()+60*60*24*30);
-			setcookie("Password", crypt($passwordToSave), time()+60*60*24*30);
+			setcookie("Password", $passwordToSave, time()+60*60*24*30);
 		}
 		
 		public function searchForCookies()
@@ -97,7 +97,8 @@
 		// Logga in med kakor.
 		public function loginWithCookies()
 		{
-			$this->model->verifyUserInput($_COOKIE["Username"], $_COOKIE["Password"]);
+			$this->model->verifyUserInput($_COOKIE["Username"], $_COOKIE["Password"], true);
+			$this->showMessage("Inloggningen lyckades via cookies");
 		}
 		
 		// Tar bort alla cookies.
@@ -131,6 +132,12 @@
 		public function successfulLogin()
 		{
 			$this->showMessage("Inloggningen lyckades!");
+		}
+		
+		// Visar login-meddelande för "Håll mig inloggad"-funktionen.
+		public function successfulLoginAndCookieCreation()
+		{
+			$this->showMessage("Inloggningen lyckades och vi kommer ihåg dig nästa gång");
 		}
 		
 		// Visar logout-meddelande.

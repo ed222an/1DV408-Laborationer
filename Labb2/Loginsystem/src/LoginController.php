@@ -70,17 +70,22 @@
 				try
 				{
 					// Verifiera data i fälten.
-					$this->model->verifyUserInput($_POST['username'], $_POST['password']);
+					$this->model->verifyUserInput($_POST['username'], md5($_POST['password']));
 					
 					// Kontrollerar om "Håll mig inloggad"-rutan är ikryssad.
 					if($checkboxStatus === true)
 					{
 						// Skapa cookies.
-						$this->view->createCookies($_POST['username'], $_POST['password']);
+						$this->view->createCookies($_POST['username'], md5($_POST['password']));
+						
+						// Visar cookielogin-meddelande.
+						$this->view->successfulLoginAndCookieCreation();
 					}
-					
-					// Visar login-meddelande.
+					else
+					{
+						// Visar login-meddelande.
 					$this->view->successfulLogin();
+					}
 				}
 				catch(Exception $e)
 				{

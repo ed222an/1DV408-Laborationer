@@ -3,7 +3,7 @@
 	class LoginModel
 	{
 		private $correctUsername = "Admin";
-		private $correctPassword = "Password";
+		private $correctPassword = "dc647eb65e6711e155375218212b3964";
 		
 		// Kontrollerar loginstatusen. Är användaren inloggad returnerar metoden true, annars false.
 		public function checkLoginStatus()
@@ -17,11 +17,8 @@
 		}
 		
 		// Kontrollerar användarinput gentemot de faktiska användaruppgifterna.
-		public function verifyUserInput($inputUsername, $inputPassword)
-		{
-			// Skapar en hårdkodad krypterad version av lösenordet.
-			$cryptedPassword = "$1$/S..a.1.\$VQ3dGKDQb.GSVCGyNWx05.";
-				
+		public function verifyUserInput($inputUsername, $inputPassword, $isCookieLogin = false)
+		{				
 			if($inputUsername == "" || $inputUsername === NULL)
 			{
 				// Kasta undantag.
@@ -43,18 +40,15 @@
 								
 				return true;
 			}
-			
-			// Kontrollerar ifall användaren loggar in med korrekt användarnamn och ett krypterat lösenord.
-			if($inputUsername == $this->correctUsername && $inputPassword == $cryptedPassword)
-			{
-				// Inloggningsstatus och användarnamn sparas i sessionen.
-				$_SESSION['loggedIn'] = true;
-				$_SESSION['loggedInUser'] = $inputUsername;
-								
-				return true;
-			}
 			else
 			{
+				// Är det en inloggning med cookies...
+				if($isCookieLogin)
+				{
+					// Kasta cookie-felmeddelande.
+					throw new Exception("Felaktig information i cookie");
+				}
+				
 				// Kasta undantag.
 				throw new Exception("Felaktigt användarnamn och/eller lösenord");
 			}
