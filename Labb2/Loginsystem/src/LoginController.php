@@ -9,7 +9,7 @@
 		private $model;
 		
 		public function __construct()
-		{
+		{			
 			// Skapar nya instanser av modell- & vy-klassen.
 			$this->model = new LoginModel();
 			$this->view = new LoginView($this->model);
@@ -26,6 +26,9 @@
 				{
 					// Visar eventuella felmeddelanden.
 					$this->view->showMessage($e->getMessage());
+					
+					// Tar bort de felaktiga kakorna.
+					$this->view->removeCookies();
 				}
 			}
 			else // Annars, visa standardsidan på normalt vis.
@@ -84,7 +87,7 @@
 					else
 					{
 						// Visar login-meddelande.
-					$this->view->successfulLogin();
+						$this->view->successfulLogin();
 					}
 				}
 				catch(Exception $e)

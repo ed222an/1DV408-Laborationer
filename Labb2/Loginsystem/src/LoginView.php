@@ -80,8 +80,15 @@
 		// Skapar cookies innehållande de medskickande värdena.
 		public function createCookies($usernameToSave, $passwordToSave)
 		{
-			setcookie("Username", $usernameToSave, time()+60*60*24*30);
-			setcookie("Password", $passwordToSave, time()+60*60*24*30);
+			// Bestämmer cookies livslängd.
+			$cookieExpirationTime = time()+60*60*24*30;
+			
+			// Skapar cookies.
+			setcookie("Username", $usernameToSave, $cookieExpirationTime);
+			setcookie("Password", $passwordToSave, $cookieExpirationTime);
+			
+			//Skapar en fil innehållande information om kakornas livslängd.
+			$this->model->createReferenceFile($cookieExpirationTime, "cookieExpirationTime");
 		}
 		
 		public function searchForCookies()
@@ -97,7 +104,13 @@
 		// Logga in med kakor.
 		public function loginWithCookies()
 		{
+			// Validera cookies mot textfilen.
+			$this->model->validateExpirationTime();
+			
+			// Validera kakornas innehåll.
 			$this->model->verifyUserInput($_COOKIE["Username"], $_COOKIE["Password"], true);
+			
+			// Visa rättmeddelande.
 			$this->showMessage("Inloggningen lyckades via cookies");
 		}
 		

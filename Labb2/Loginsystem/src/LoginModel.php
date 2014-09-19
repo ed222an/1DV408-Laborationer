@@ -46,12 +46,18 @@
 				if($isCookieLogin)
 				{
 					// Kasta cookie-felmeddelande.
-					throw new Exception("Felaktig information i cookie");
+					$this->cookieException();
 				}
 				
 				// Kasta undantag.
 				throw new Exception("Felaktigt användarnamn och/eller lösenord");
 			}
+		}
+		
+		public function cookieException()
+		{
+			// Kasta cookie-felmeddelande.
+			throw new Exception("Felaktig information i cookie");
 		}
 		
 		// Hämtar användarnamnet från sessionen.
@@ -68,6 +74,45 @@
 		{
 			session_unset();
 			session_destroy();
+		}
+		
+		// Skapar en fil på servern som innehåller det medskickade objektets värden.
+		public function createReferenceFile($referenceValue, $fileName)
+		{
+			// Skapar och öppnar en textfil.
+			$referenceFile = fopen($fileName . ".txt", "w") or die("Unable to open file!");
+			
+			fwrite($referenceFile, $referenceValue);
+			
+			// Stänger textfilen.
+			fclose($referenceFile);
+		}
+		
+		// Kontrollerar textfilen gentemot kakornas tid.
+		public function validateExpirationTime()
+		{
+			// Variabel som ska innehålla tiden från filen.
+			$correctTime = "";
+			
+			// Öppnar filen, läser igenom den och sparar värdet i $correctTime, för att sedan stänga filen.
+			$file = fopen('cookieExpirationTime.txt','r');
+			while ($line = fgets($file))
+			{
+			  $correctTime = $line;
+			}
+			fclose($file);
+			
+			// Om tiden från filen är större än just precis nu...
+			if(intval($correctTime) > time())
+			{
+				// Returnera true, kakan är fortfarande giltig.
+				return true;
+			}
+			else
+			{
+				// Annars kalla på felmeddelandet, kakans levnadstid är över.
+				$this->cookieException();
+			}
 		}
 	}
 
