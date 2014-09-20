@@ -9,9 +9,12 @@
 		private $model;
 		
 		public function __construct()
-		{			
+		{
+			// Sparar ner användarens användaragent och ip. Används vid verifiering av användaren.
+			$userAgent = $_SERVER['HTTP_USER_AGENT'];
+						
 			// Skapar nya instanser av modell- & vy-klassen.
-			$this->model = new LoginModel();
+			$this->model = new LoginModel($userAgent);
 			$this->view = new LoginView($this->model);
 			
 			// Kontrollerar ifall det finns kakor och ifall användaren inte är inloggad.

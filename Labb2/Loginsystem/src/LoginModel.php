@@ -4,11 +4,18 @@
 	{
 		private $correctUsername = "Admin";
 		private $correctPassword = "dc647eb65e6711e155375218212b3964";
+		private $sessionUserAgent;
+		
+		public function __construct($userAgent)
+		{
+			// Sparar användarens useragent i den privata variablerna.
+			$this->sessionUserAgent = $userAgent;
+		}
 		
 		// Kontrollerar loginstatusen. Är användaren inloggad returnerar metoden true, annars false.
 		public function checkLoginStatus()
 		{
-			if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true)
+			if(isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === true && $_SESSION['sessionUserAgent'] === $this->sessionUserAgent)
 			{
 				return true;
 			}
@@ -18,14 +25,14 @@
 		
 		// Kontrollerar användarinput gentemot de faktiska användaruppgifterna.
 		public function verifyUserInput($inputUsername, $inputPassword, $isCookieLogin = false)
-		{				
+		{										
 			if($inputUsername == "" || $inputUsername === NULL)
 			{
 				// Kasta undantag.
 				throw new Exception("Användarnamn saknas");
 			}
 			
-			if($inputPassword == "" || $inputPassword === NULL)
+			if($inputPassword == "" || $inputPassword === NULL || $inputPassword === md5(""))
 			{
 				// Kasta undantag.
 				throw new Exception("Lösenord saknas");
@@ -37,6 +44,9 @@
 				// Inloggningsstatus och användarnamn sparas i sessionen.
 				$_SESSION['loggedIn'] = true;
 				$_SESSION['loggedInUser'] = $inputUsername;
+				
+				// Sparar useragent i sessionen.
+				$_SESSION['sessionUserAgent'] = $this->sessionUserAgent;
 								
 				return true;
 			}
