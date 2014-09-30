@@ -12,6 +12,7 @@
 		public function __construct(LoginModel $model)
 		{
 			$this->model = $model;
+			date_default_timezone_set('Europe/Stockholm');
 		}
 		
 		// Kontrollerar ifall användarnamnet är lagrat i POST-arrayen.
